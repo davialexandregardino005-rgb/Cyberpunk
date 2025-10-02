@@ -1,4 +1,4 @@
--- GUI simples com botão toggle
+-- GUI simples com botão toggle + arrastável
 local ScreenGui = Instance.new("ScreenGui")
 local ToggleButton = Instance.new("TextButton")
 
@@ -18,6 +18,8 @@ ToggleButton.Font = Enum.Font.SourceSansBold
 ToggleButton.Text = "Ativar Plataforma"
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.TextSize = 22.0
+ToggleButton.Draggable = true -- 🔥 deixa arrastável
+ToggleButton.Active = true
 
 -- Função de toggle
 ToggleButton.MouseButton1Click:Connect(function()
@@ -35,10 +37,12 @@ ToggleButton.MouseButton1Click:Connect(function()
             platform.Position = char.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
             platform.Parent = workspace
 
-            -- Loop para subir
+            -- Loop para subir e seguir player
             loop = game:GetService("RunService").RenderStepped:Connect(function()
-                if platform then
-                    platform.Position = platform.Position + Vector3.new(0, 0.1, 0) -- sobe
+                if platform and char and char:FindFirstChild("HumanoidRootPart") then
+                    -- Sempre embaixo do player
+                    local pos = char.HumanoidRootPart.Position - Vector3.new(0, 3, 0)
+                    platform.Position = Vector3.new(pos.X, platform.Position.Y + 0.1, pos.Z)
                 end
             end)
         end
